@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Sets the ranges for the next portion of the script
+ * Sets the ranges for the raffle participants if the params are
+ * provided to the script.
  */
 if (isset($argv[1])) {
     $start    = $argv[1];
@@ -11,7 +12,7 @@ if (isset($argv[1])) {
 }
 
 /**
- * Retrieves the winner and logs him so he can't win again.
+ * Retrieves the winner and removes him so he can't win again.
  */
 if (!isset($argv[1]) && checkForEntrants()) {
 	getWinner();
