@@ -5,8 +5,8 @@
  */
 if (isset($argv[1])) {
     $handle   = fopen(__DIR__ . '/range.txt', 'w+');
-    $start    = $argv[2];
-    $end      = $argv[3];
+    $start    = $argv[1];
+    $end      = $argv[2];
     $entrants = [];
     
     while ($start < $end) {
@@ -26,6 +26,11 @@ if (isset($argv[1])) {
  * Retrieves the winner and logs him so he can't win again.
  */
 if (!isset($argv[1])) {
+    if (!file_exists(__DIR__ . '/range.txt')) {
+        showLine("\033[31mNo Entrants Available");
+	die();
+    }
+
     $handle   = fopen(__DIR__ . '/range.txt', 'r+');
     $range    = fread($handle, filesize(__DIR__ . '/range.txt'));
     $entrants = unserialize($range);
