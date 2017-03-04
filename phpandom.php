@@ -5,17 +5,17 @@
  * provided to the script.
  */
 if (isset($argv[1])) {
-	$start    = $argv[1];
-	$end      = $argv[2];
-	
-	insertEntrantRange($start, $end);
+    $start    = $argv[1];
+    $end      = $argv[2];
+    
+    insertEntrantRange($start, $end);
 }
 
 /**
  * Retrieves the winner and removes him so he can't win again.
  */
 if (!isset($argv[1]) && checkForEntrants()) {
-	getWinner();
+    getWinner();
 }
 
 /**
@@ -27,10 +27,10 @@ if (!isset($argv[1]) && checkForEntrants()) {
  */
 function showLine(string $line, int $delay = 0)
 {
-	sleep($delay);
-	echo $line . "\n\r";
+    sleep($delay);
+    echo $line . "\n\r";
 
-	return null;
+    return null;
 }
 
 /**
@@ -41,7 +41,7 @@ function showLine(string $line, int $delay = 0)
  */
 function openRangeFile(string $mode)
 {
-	return fopen(__DIR__ . '/range.txt', $mode);
+    return fopen(__DIR__ . '/range.txt', $mode);
 }
 
 /**
@@ -52,9 +52,9 @@ function openRangeFile(string $mode)
  */
 function readRangeFile($handle): array
 {
-	$data = fread($handle, filesize(__DIR__ . '/range.txt'));
+    $data = fread($handle, filesize(__DIR__ . '/range.txt'));
 
-	return unserialize($data);
+    return unserialize($data);
 }
 
 /**
@@ -66,19 +66,19 @@ function readRangeFile($handle): array
  */
 function insertEntrantRange(int $start, int $end)
 {
-	$handle   = openRangeFile('w+');
-	$entrants = [];
-	
-	while ($start <= $end) {
-		array_push($entrants, $start);
-		$start++;
-	}
+    $handle   = openRangeFile('w+');
+    $entrants = [];
+    
+    while ($start <= $end) {
+        array_push($entrants, $start);
+        $start++;
+    }
 
-	fwrite($handle, serialize($entrants));
-	fclose($handle);
+    fwrite($handle, serialize($entrants));
+    fclose($handle);
 
-	showLine("\033[33mEntrants Registered");
-	return null;
+    showLine("\033[33mEntrants Registered");
+    return null;
 }
 
 /**
@@ -88,12 +88,12 @@ function insertEntrantRange(int $start, int $end)
  */
 function checkForEntrants(): bool
 {
-	if (!file_exists(__DIR__ . '/range.txt')) {
-		showLine("\033[31mNo Entrants Available");
-		return false;
-	}
+    if (!file_exists(__DIR__ . '/range.txt')) {
+        showLine("\033[31mNo Entrants Available");
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 /**
@@ -103,28 +103,28 @@ function checkForEntrants(): bool
  */
 function getWinner()
 {
-	$handle   = openRangeFile('r+');
-	$entrants = readRangeFile($handle);
-	$count    = count($entrants);
+    $handle   = openRangeFile('r+');
+    $entrants = readRangeFile($handle);
+    $count    = count($entrants);
 
-	fclose($handle);
+    fclose($handle);
 
-	if ($count > 0) {
-		$winner = mt_rand(0, $count - 1);
+    if ($count > 0) {
+        $winner = mt_rand(0, $count - 1);
 
-		showLine("\033[34mAnd the winner is...\033[0m");
-		showLine("\033[32mEntrant: " . $entrants[$winner] . "\033[0m", 2);
-		unset($entrants[$winner]);
+        showLine("\033[34mAnd the winner is...\033[0m");
+        showLine("\033[32mEntrant: " . $entrants[$winner] . "\033[0m", 2);
+        unset($entrants[$winner]);
 
-		$entrants = array_values($entrants);
-		$handle   = openRangeFile('w+');
+        $entrants = array_values($entrants);
+        $handle   = openRangeFile('w+');
 
-		fwrite($handle, serialize($entrants));
-		fclose($handle);
+        fwrite($handle, serialize($entrants));
+        fclose($handle);
 
-		return null;
-	}
+        return null;
+    }
 
-	showLine("\033[36mNo Entrants Have Been Entered");
-	return null;
+    showLine("\033[36mNo Entrants Have Been Entered");
+    return null;
 }
